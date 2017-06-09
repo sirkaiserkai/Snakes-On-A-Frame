@@ -132,7 +132,8 @@ $(document).ready(function(){
 			{
 				let c = s.body[j];
 				//Lets paint 10px wide cells
-				paint_cell(c.x, c.y, "LightSkyBlue");
+				console.log('Color: ' + s.color);
+				paint_cell(c.x, c.y, s.color);
 			}
 		
 			//Lets paint the score

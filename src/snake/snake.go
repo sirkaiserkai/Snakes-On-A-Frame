@@ -6,10 +6,24 @@ import (
 	"fmt"
 	"game"
 	"log"
+	mRand "math/rand"
 	"sync"
 
 	"github.com/googollee/go-socket.io"
 )
+
+var colors = []string{
+	"LightGreen",
+	"LightSkyBlue",
+	"Pink",
+	"Navy",
+	"Teal",
+	"SteelBlue",
+	"RebeccaPurple",
+	"Coral",
+	"DarkRed",
+	"MediumPurple",
+}
 
 func pseudo_uuid() (uuid string) {
 
@@ -70,7 +84,7 @@ type Snake struct {
 	Username  string       `json:"username"`
 	Body      []game.Point `json:"body"`
 	direction Direction    `json:"direction"`
-	Color     string       `json:"color`
+	Color     string       `json:"color"`
 	Score     int          `json:"score"`
 
 	addBodyPart bool
@@ -82,6 +96,7 @@ func NewSnake(so *socketio.Socket) Snake {
 
 	snake.m = sync.Mutex{}
 	snake.direction = Right
+	snake.Color = colors[mRand.Intn(len(colors))]
 	snake.ID = pseudo_uuid()
 	snake.so = so
 	snake.addBodyPart = false
