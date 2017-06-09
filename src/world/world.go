@@ -81,30 +81,52 @@ func (w *World) Step() {
 func (w *World) CalculateWorldState() {
 	w.Mutex.Lock()
 
-	// dicMutex := sync.Mutex{}
-	snakesToRemove := make(map[string]*snake.Snake)
+	// Mutex to prevent snakesToRemove dict being modified simultaneously
+	dicMutex := sync.Mutex{}
+	snakesToRemove := make(map[string]snake.Snake)
+
+	// group which waits until all calculations are completed.
+	wg := sync.WaitGroup{}
 
 	for _, s0 := range w.snakes {
 
-		if s0.WallCollision(w.board) {
-			snakesToRemove[s0.ID] = s0
-		}
+		wg.Add(1)
+		go func(s snake.Snake, b game.Board) {
+			defer wg.Done()
+			if s.WallCollision(b) {
+				dicMutex.Lock()
+				snakesToRemove[s.ID] = s
+				dicMutex.Unlock()
+			}
+		}(*s0, w.board)
 
-		for i, bodyPart := range s0.Body {
-			if i != 0 {
-				if s0.Head() == bodyPart {
-					snakesToRemove[s0.ID] = s0
+		wg.Add(1)
+		go func(s snake.Snake) {
+			defer wg.Done()
+			for i, bodyPart := range s.Body {
+				if i != 0 {
+					if s.Head() == bodyPart {
+						dicMutex.Lock()
+						snakesToRemove[s.ID] = s
+						dicMutex.Unlock()
+					}
 				}
 			}
-		}
+		}(*s0)
 
 		for _, s1 := range w.snakes {
-			if s0.ID != s1.ID {
-				if s0.SnakeCollision(*s1) {
-					snakesToRemove[s0.ID] = s0
-					snakesToRemove[s1.ID] = s1
+			wg.Add(1)
+			go func(s0, s1 snake.Snake) {
+				defer wg.Done()
+				if s0.ID != s1.ID {
+					if s0.SnakeCollision(s1) {
+						dicMutex.Lock()
+						snakesToRemove[s0.ID] = s0
+						snakesToRemove[s1.ID] = s1
+						dicMutex.Unlock()
+					}
 				}
-			}
+			}(*s0, *s1)
 		}
 
 		if s0.FoodCollision(w.food) {
@@ -115,6 +137,7 @@ func (w *World) CalculateWorldState() {
 		}
 	}
 
+	wg.Wait()
 	snakes := w.snakes[:0]
 	w.Ed.Listeners = []events.Listener{}
 	for _, s := range w.snakes {
