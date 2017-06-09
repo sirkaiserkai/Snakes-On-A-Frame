@@ -184,11 +184,17 @@ func (s *Snake) WallCollision(b game.Board) bool {
 }
 
 func (s0 *Snake) SnakeCollision(s1 Snake) bool {
-	for _, i := range s0.Body {
+	/*for _, i := range s0.Body {
 		for _, j := range s1.Body {
 			if i == j {
 				return true // collis
 			}
+		}
+	}*/
+
+	for _, b := range s1.Body {
+		if s0.Head() == b {
+			return true // collision
 		}
 	}
 

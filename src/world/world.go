@@ -122,7 +122,7 @@ func (w *World) CalculateWorldState() {
 					if s0.SnakeCollision(s1) {
 						dicMutex.Lock()
 						snakesToRemove[s0.ID] = s0
-						snakesToRemove[s1.ID] = s1
+						// snakesToRemove[s1.ID] = s1
 						dicMutex.Unlock()
 					}
 				}
