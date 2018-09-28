@@ -1,12 +1,12 @@
 package main
 
 import (
-	"events"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/events"
 	"log"
 	"net/http"
-	"snake"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/snake"
 	"time"
-	"world"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/world"
 
 	"github.com/googollee/go-socket.io"
 	"github.com/gorilla/mux"

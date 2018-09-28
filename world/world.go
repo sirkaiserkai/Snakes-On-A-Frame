@@ -2,11 +2,11 @@ package world
 
 import (
 	"encoding/json"
-	"events"
-	"game"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/events"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/game"
 	"log"
 	"math/rand"
-	"snake"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/snake"
 	"sync"
 )
 

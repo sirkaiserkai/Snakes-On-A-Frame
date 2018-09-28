@@ -2,9 +2,9 @@ package snake
 
 import (
 	"crypto/rand"
-	"events"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/events"
 	"fmt"
-	"game"
+	"github.com/sirkaiserkai/Snakes-On-A-Frame/game"
 	"log"
 	mRand "math/rand"
 	"sync"
